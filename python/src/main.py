@@ -6,6 +6,8 @@ import serial
 import pandas as pd
 import numpy as np
 
+import gesture_detector as gd
+
 PORT = '/dev/ttyUSB0'
 BAUDRATE = 115200
 
@@ -20,6 +22,8 @@ queues = {
     'az': collections.deque(maxlen=FILTER_SIZE),
 }
 SHAKED_THRESHOLD = 25000
+
+gesture_detector = gd.GestureDetector()
 
 def main():
     global initialized, start_at
@@ -48,12 +52,16 @@ def main():
 def on_data_recieved(ax, ay, az, y, p, r):
     # print(ax, ay, az, gx, gy, gz)
     record(ax, ay, az)
+    gesture_detector.record(ax, ay, az)
+
     acc, acc_array= get_filtered_values()
     ypr_array = np.array([y, p, r], dtype=float)
     ax_norm = np.linalg.norm(acc_array)
     if ax_norm > SHAKED_THRESHOLD and acc['ay'] < 0:
         print(ax_norm)
         print(time.time(), 'shaked!!!!!', acc['ay'])
+    if gesture_detector.is_raised_twice(ax, ay, az):
+        print('raised twice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     roll = ypr_array[1]
     print(roll)
     return False
