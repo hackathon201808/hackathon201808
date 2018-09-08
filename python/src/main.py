@@ -8,7 +8,8 @@ import numpy as np
 
 import gesture_detector as gd
 
-PORT = '/dev/ttyUSB0'
+# PORT = '/dev/ttyUSB0'
+PORT = '/dev/rfcomm0'
 BAUDRATE = 115200
 
 data_frame = pd.DataFrame(columns=['time', 'ax', 'ay', 'az', 'gx', 'gy', 'gz'])
@@ -30,14 +31,16 @@ def main():
     with serial.Serial(PORT, timeout=0.1, baudrate=BAUDRATE) as se:
         while True:
             line = se.readline()
+            # print(str(line))
             raw_str = str(line)[:-5]
             data = raw_str.split('\\t')
+            # print(len(data))
             if len(data) < 7:
                 continue
             ax, ay, az, y, p, r = data[1:]
-            ax = int(ax)
-            ay = int(ax)
-            az = int(az)
+            ax = float(ax)
+            ay = float(ax)
+            az = float(az)
             y = float(y)
             p = float(p)
             r = float(r)
@@ -51,19 +54,19 @@ def main():
 
 def on_data_recieved(ax, ay, az, y, p, r):
     # print(ax, ay, az, gx, gy, gz)
+    print(ax, ay, az, y, p, r)
     record(ax, ay, az)
     gesture_detector.record(ax, ay, az)
 
     acc, acc_array= get_filtered_values()
     ypr_array = np.array([y, p, r], dtype=float)
     ax_norm = np.linalg.norm(acc_array)
-    if ax_norm > SHAKED_THRESHOLD and acc['ay'] < 0:
+    if ax_norm > SHAKED_THRESHOLD and acc['ay'] < -1000:
         print(ax_norm)
         print(time.time(), 'shaked!!!!!', acc['ay'])
     if gesture_detector.is_raised_twice(ax, ay, az):
         print('raised twice !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     roll = ypr_array[1]
-    print(roll)
     return False
 
 def record(ax, ay, az):
