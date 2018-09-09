@@ -5,13 +5,15 @@ import serial
 import pandas as pd
 
 
-class IMUBTRecorder:
-    def __init__(self, port, baudrate):
+class IMUBTReciever:
+    def __init__(self, port, baudrate, handler=None, record=False):
         self._port = port
         self._baudrate = baudrate
         self._columns=['ax', 'ay', 'az', 'gx', 'gy', 'gz', 'yaw', 'pitch', 'roll']
         self._data_frame = pd.DataFrame(columns=self._columns)
         self._start_at = None
+        self._handler = handler
+        self._record = record
     
     def start(self):
         with serial.Serial(self._port, timeout=0.1, baudrate=self._baudrate) as se:
@@ -34,13 +36,16 @@ class IMUBTRecorder:
                 parsed_data = {k: float(v) for k, v in zip(self._columns, data)}
                 parsed_data['time'] = elapsed
                 self._on_data_recieved(parsed_data)
-                if elapsed > 2.0:
+
+                if elapsed > 2.0 and self._record:
                     self._save()
                     break
 
     def _on_data_recieved(self, data):
-        # print(data)
-        self._make_log(data)
+        if self._handler:
+            self._handler(data)
+        if self._record:
+            self._make_log(data)
 
     def _make_log(self, data):
         s = pd.Series(data)
@@ -51,5 +56,5 @@ class IMUBTRecorder:
 
 
 if __name__ == '__main__':
-    recorder = IMUBTRecorder('/dev/rfcomm0', 115200)
+    recorder = IMUBTReciever('/dev/rfcomm0', 115200)
     recorder.start()
