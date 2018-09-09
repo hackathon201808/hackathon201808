@@ -48,5 +48,5 @@ void loop()
     displayIMU(ax, ay, az, gx, gy, gz, mx, my, mz, yaw, pitch, roll, frequency);
     last_displayed = now;
   }
-  SerialBT.printf("axyzypr\t%f\t%f\t%f\t%f\t%f\t%f\r\n", ax, ay, az, yaw, pitch, roll);
+  SerialBT.printf("axyzgxyzypr\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\r\n", ax, ay, az, gx, gy, gz, yaw, pitch, roll);
 }
