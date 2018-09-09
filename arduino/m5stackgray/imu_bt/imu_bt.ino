@@ -48,5 +48,21 @@ void loop()
     displayIMU(ax, ay, az, gx, gy, gz, mx, my, mz, yaw, pitch, roll, frequency);
     last_displayed = now;
   }
-  SerialBT.printf("axyzgxyzypr\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\r\n", ax, ay, az, gx, gy, gz, yaw, pitch, roll);
+  uint8_t btnAPressed = 0;
+  uint8_t btnBPressed = 0;
+  uint8_t btnCPressed = 0;
+  if (M5.BtnA.wasPressed()) {
+    btnAPressed = 1;
+  }
+  if (M5.BtnB.wasPressed()) {
+    btnBPressed = 1;
+  }
+  if (M5.BtnC.wasPressed()) {
+    btnCPressed = 1;
+  }
+  SerialBT.printf(
+    "axyzgxyzypr\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%d\t%d\t%d\r\n",
+    ax, ay, az, gx, gy, gz, yaw, pitch, roll,
+    btnAPressed, btnBPressed, btnCPressed);
+  M5.update();
 }
