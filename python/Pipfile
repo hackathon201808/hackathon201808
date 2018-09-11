@@ -7,6 +7,7 @@ name = "pypi"
 jupyter = "*"
 jupyter-contrib-nbextensions = "*"
 jupyter-nbextensions-configurator = "*"
+matplotlib = "*"
 
 [packages]
 pyserial = "*"

@@ -1,10 +1,10 @@
 import time
-import datetime
-import collections
 
 import serial
 import pandas as pd
 import numpy as np
+import m5_bridge as m5b
+import imu_filter as imuf
 
 # PORTは各環境で変わる
 # PORT = '/dev/ttyUSB0'
@@ -90,11 +90,19 @@ def make_log(ax, ay, az, gx, gy, gz):
     data_frame = data_frame.append(s, ignore_index=True)
     return elapsed > 10.0
 
-
-def save():
-    global data_frame
-    data_frame.to_csv("../analytics/log/log-{0:%Y-%m-%d-%H-%M-%S}.csv".format(datetime.datetime.now()))
-
-
 if __name__ == '__main__':
-    main()
+    def on_filtered(data):
+        if data['ay'] > 0.4:
+            print('thrown', time.time())
+        if data['vz'] > 0.2:
+            print('up', time.time())
+        if data['vz'] < -0.2:
+            print('down', time.time())
+
+    def on_button_pressed(a, b, c):
+        print(a, b, c)
+
+    filter = imuf.IMUFilter(on_filtered=on_filtered)
+    imu = m5b.M5Brigde('/dev/rfcomm0', 115200, on_imu_recieved=filter.record, on_button_pressed=on_button_pressed)
+    imu.start()
+
