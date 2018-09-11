@@ -6,7 +6,10 @@ import serial
 import pandas as pd
 import numpy as np
 
-PORT = '/dev/ttyUSB0'
+# PORTは各環境で変わる
+# PORT = '/dev/ttyUSB0'
+PORT = '/dev/tty.SLAB_USBtoUART'
+
 BAUDRATE = 115200
 
 data_frame = pd.DataFrame(columns=['time', 'ax', 'ay', 'az', 'gx', 'gy', 'gz'])
@@ -55,7 +58,7 @@ def on_data_recieved(ax, ay, az, y, p, r):
         print(ax_norm)
         print(time.time(), 'shaked!!!!!', acc['ay'])
     roll = ypr_array[1]
-    print(roll)
+    # print(roll)
     return False
 
 def record(ax, ay, az):
