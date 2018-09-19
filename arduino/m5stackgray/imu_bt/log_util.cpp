@@ -84,7 +84,7 @@ void displayIMU(float ax, float ay, float az,
                 float gx, float gy, float gz,
                 float mx, float my, float mz,
                 float yaw, float pitch, float roll,
-                float frequency)
+                float frequency, float A, float B, float C)
 {
     M5.Lcd.setCursor(0, 0);
     M5.Lcd.print("     x       y       z ");
@@ -102,4 +102,13 @@ void displayIMU(float ax, float ay, float az,
     M5.Lcd.print("rt: ");
     M5.Lcd.print(frequency, 2);
     M5.Lcd.print(" Hz");
+
+    M5.Lcd.setCursor(12, 164);
+    M5.Lcd.print("Btn: ");
+    M5.Lcd.print(" BtnA");
+    M5.Lcd.print(A, 2);
+    M5.Lcd.print(" BtnB");
+    M5.Lcd.print(B, 2);
+    M5.Lcd.print(" BtnC");
+    M5.Lcd.print(C, 2);
 }

@@ -41,13 +41,6 @@ void loop()
   float yaw, pitch, roll;
   imu->read(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz, &yaw, &pitch, &roll);
 
-  uint32_t now = millis();
-  if (now - last_displayed > 200)
-  {
-    auto frequency = imu->getFrequency();
-    displayIMU(ax, ay, az, gx, gy, gz, mx, my, mz, yaw, pitch, roll, frequency);
-    last_displayed = now;
-  }
   uint8_t btnAPressed = 0;
   uint8_t btnBPressed = 0;
   uint8_t btnCPressed = 0;
@@ -60,6 +53,15 @@ void loop()
   if (M5.BtnC.wasPressed()) {
     btnCPressed = 1;
   }
+
+  uint32_t now = millis();
+  if (now - last_displayed > 200)
+  {
+    auto frequency = imu->getFrequency();
+    displayIMU(ax, ay, az, gx, gy, gz, mx, my, mz, yaw, pitch, roll, frequency, btnAPressed, btnBPressed, btnCPressed);
+    last_displayed = now;
+  }
+
   SerialBT.printf(
     "axyzgxyzypr\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%d\t%d\t%d\r\n",
     ax, ay, az, gx, gy, gz, yaw, pitch, roll,

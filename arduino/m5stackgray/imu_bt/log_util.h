@@ -15,6 +15,6 @@ void displayIMU(float ax, float ay, float az,
                 float gx, float gy, float gz,
                 float mx, float my, float mz,
                 float yaw, float pitch, float roll,
-                float frequency);
+                float frequency, float A, float B, float C);
 
 #endif

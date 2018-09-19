@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 
+
 class IMUFilter:
     RECORD_SIZE = 10
     def __init__(self, on_filtered=None):
