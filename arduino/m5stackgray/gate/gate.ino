@@ -109,7 +109,7 @@ void loop()
     }
 
     uint32_t now = millis();
-    if (now - last_displayed > 200)
+    if (now - last_displayed > 50)
     {
         bool changed = false;
         // M5.Lcd.drawNumber(now, 190, 0, 2);
@@ -118,19 +118,21 @@ void loop()
         {
             // M5.Lcd.drawString("number :", 0, i * 15, 2);
             long pinResult = digitalRead(pinlist[i]);
+            M5.Lcd.drawNumber(pinResult, 100, i * 15, 2);
+            M5.Lcd.drawNumber(pinResultlist[i], 140, i * 15, 2);
+            
             if (pinResult != pinResultlist[i])
             {
                 changed = true;
             }
             pinResultlist[i] = pinResult;
-            // M5.Lcd.drawNumber(pinResult, 100, i * 15, 2);
         }
-        // M5.Lcd.drawString("BtnA :", 0, 170, 2);
-        // M5.Lcd.drawNumber(btnAPressed, 40, 170, 2);
-        // M5.Lcd.drawString("BtnB :", 60, 170, 2);
-        // M5.Lcd.drawNumber(btnBPressed, 100, 170, 2);
-        // M5.Lcd.drawString("BtnC :", 120, 170, 2);
-        // M5.Lcd.drawNumber(btnCPressed, 160, 170, 2);
+        M5.Lcd.drawString("BtnA :", 0, 170, 2);
+        M5.Lcd.drawNumber(btnAPressed, 40, 170, 2);
+        M5.Lcd.drawString("BtnB :", 60, 170, 2);
+        M5.Lcd.drawNumber(btnBPressed, 100, 170, 2);
+        M5.Lcd.drawString("BtnC :", 120, 170, 2);
+        M5.Lcd.drawNumber(btnCPressed, 160, 170, 2);
         last_displayed = now;
 
         if (changed)
