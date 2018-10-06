@@ -15,3 +15,6 @@ pandas = "*"
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+start_bt_receiver = "python python/src/main.py"
